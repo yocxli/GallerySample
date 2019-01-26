@@ -12,7 +12,7 @@ class MainActivity : AppCompatActivity() {
 
         supportFragmentManager
             .beginTransaction()
-            .add(R.id.content, MediaFileFragment.newInstance(3))
+            .add(R.id.content, MediaFileFragment.newInstance(4))
             .commit()
     }
 }
