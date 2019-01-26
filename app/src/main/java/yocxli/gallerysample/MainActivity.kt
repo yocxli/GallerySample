@@ -10,9 +10,11 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        supportFragmentManager
-            .beginTransaction()
-            .add(R.id.content, MediaFileFragment.newInstance(4))
-            .commit()
+        if (supportFragmentManager.findFragmentById(R.id.content) == null) {
+            supportFragmentManager
+                .beginTransaction()
+                .add(R.id.content, MediaFileFragment.newInstance(4))
+                .commit()
+        }
     }
 }
