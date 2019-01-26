@@ -14,7 +14,8 @@ import yocxli.gallerysample.R
 
 import yocxli.gallerysample.ui.list.MediaFileFragment.OnListFragmentInteractionListener
 
-import kotlinx.android.synthetic.main.fragment_mediafile.view.*
+import kotlinx.android.synthetic.main.fragment_mediafile_content.view.*
+import kotlinx.android.synthetic.main.fragment_mediafile_section.view.*
 import yocxli.gallerysample.GlideApp
 import yocxli.gallerysample.domain.entity.MediaFile
 
@@ -23,9 +24,9 @@ import yocxli.gallerysample.domain.entity.MediaFile
  */
 class MediaFileRecyclerViewAdapter(
     private val fragment: Fragment,
-    private val values: List<MediaFile>,
+    private val values: List<Any>,
     private val mListener: OnListFragmentInteractionListener?
-) : RecyclerView.Adapter<MediaFileRecyclerViewAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val mOnClickListener: View.OnClickListener
 
@@ -36,37 +37,77 @@ class MediaFileRecyclerViewAdapter(
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.fragment_mediafile, parent, false)
-        return ViewHolder(view)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        when (viewType) {
+            Type.CONTENT.ordinal -> {
+                val view = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.fragment_mediafile_content, parent, false)
+                return ContentViewHolder(view)
+            }
+            else -> {
+                val view = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.fragment_mediafile_section, parent, false)
+                return SectionViewHolder(view)
+            }
+        }
+
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, position: Int) {
         val item = values[position]
-        GlideApp.with(fragment)
-            .load(item.uri)
-            .placeholder(ColorDrawable(Color.BLACK))
-            .error(ColorDrawable(Color.RED))
-            .fallback(ColorDrawable(Color.GRAY))
-            .into(holder.contentView)
-        holder.name.text = item.name
 
-        with(holder.view) {
-            tag = item
-            setOnClickListener(mOnClickListener)
+        when (item) {
+            is MediaFile -> {
+                val holder = viewHolder as ContentViewHolder
+                GlideApp.with(fragment)
+                    .load(item.uri)
+                    .placeholder(ColorDrawable(Color.GRAY))
+                    .error(ColorDrawable(Color.RED))
+                    .fallback(ColorDrawable(Color.BLUE))
+                    .into(holder.contentView)
+                holder.name.text = item.name
+
+                with(holder.view) {
+                    tag = item
+                    setOnClickListener(mOnClickListener)
+                }
+            }
+            else -> {
+                val holder = viewHolder as SectionViewHolder
+                holder.title.text = item.toString()
+            }
         }
     }
 
     override fun getItemCount(): Int = values.size
 
-    inner class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
+    override fun getItemViewType(position: Int): Int {
+        val item = values[position]
+        when (item) {
+            is MediaFile -> return Type.CONTENT.ordinal
+            else -> return Type.SECTION_HEADER.ordinal
+        }
+    }
+
+    inner class SectionViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
+        val title = view.section_title
+
+        override fun toString(): String {
+            return super.toString() + " '$title'"
+        }
+    }
+
+    inner class ContentViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
         val contentView: ImageView = view.content
         val name: TextView = view.name
 
         override fun toString(): String {
-            return super.toString() + " '" + contentView + "'"
+            return super.toString() + " '$contentView'"
         }
     }
 
+    enum class Type {
+        SECTION_HEADER,
+        CONTENT
+    }
 }
