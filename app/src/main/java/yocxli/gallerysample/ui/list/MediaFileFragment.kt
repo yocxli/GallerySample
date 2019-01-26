@@ -2,15 +2,14 @@ package yocxli.gallerysample.ui.list
 
 import android.content.Context
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import yocxli.gallerysample.R
 import yocxli.gallerysample.domain.entity.MediaFile
-
 import yocxli.gallerysample.ui.list.dummy.DummyContent
 
 /**
@@ -54,7 +53,12 @@ class MediaFileFragment : Fragment() {
                     DummyContent.ITEMS,
                     listener
                 )
-                addItemDecoration(GridDividerDecoration(resources.getDimensionPixelSize(R.dimen.grid_divider), columnCount))
+                addItemDecoration(
+                    GridDividerDecoration(
+                        resources.getDimensionPixelSize(R.dimen.grid_divider),
+                        columnCount
+                    )
+                )
             }
         }
         return view

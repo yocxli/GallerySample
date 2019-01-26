@@ -1,7 +1,7 @@
 package yocxli.gallerysample
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import yocxli.gallerysample.ui.list.MediaFileFragment
 
 class MainActivity : AppCompatActivity() {
