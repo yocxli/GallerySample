@@ -1,6 +1,5 @@
 package yocxli.gallerysample.ui.list.dummy
 
-import android.provider.MediaStore
 import yocxli.gallerysample.domain.entity.ImageFile
 import yocxli.gallerysample.domain.entity.MediaFile
 import yocxli.gallerysample.domain.entity.Resolution
@@ -31,7 +30,7 @@ object DummyContent {
             )
         }
         ITEMS.add("Section 2")
-        for (i in (COUNT+1)..(COUNT+COUNT)) {
+        for (i in (COUNT + 1)..(COUNT + COUNT)) {
             addItem(
                 createDummyItem(i)
             )

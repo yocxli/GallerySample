@@ -1,23 +1,21 @@
 package yocxli.gallerysample.ui.list
 
+
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import yocxli.gallerysample.R
-
-
-import yocxli.gallerysample.ui.list.MediaFileFragment.OnListFragmentInteractionListener
-
+import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.fragment_mediafile_content.view.*
 import kotlinx.android.synthetic.main.fragment_mediafile_section.view.*
 import yocxli.gallerysample.GlideApp
+import yocxli.gallerysample.R
 import yocxli.gallerysample.domain.entity.MediaFile
+import yocxli.gallerysample.ui.list.MediaFileFragment.OnListFragmentInteractionListener
 
 /**
  *
