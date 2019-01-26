@@ -87,8 +87,8 @@ class MediaFileRecyclerViewAdapter(
         }
     }
 
-    inner class SectionViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
-        val title = view.section_title
+    inner class SectionViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        val title: TextView = view.section_title
 
         override fun toString(): String {
             return super.toString() + " '$title'"
