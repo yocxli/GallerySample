@@ -4,7 +4,6 @@ import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -40,19 +39,12 @@ class MediaFileFragment : Fragment() {
         // Set the adapter
         if (view is RecyclerView) {
             with(view) {
-                layoutManager = when {
-                    columnCount <= 1 -> {
-                        LinearLayoutManager(context)
-                    }
-                    else -> {
-                        GridLayoutManager(context, columnCount).apply {
-                            spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
-                                override fun getSpanSize(position: Int): Int {
-                                    when (adapter?.getItemViewType(position)) {
-                                        MediaFileRecyclerViewAdapter.Type.CONTENT.ordinal -> return 1
-                                        else -> return columnCount
-                                    }
-                                }
+                layoutManager = GridLayoutManager(context, columnCount).apply {
+                    spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+                        override fun getSpanSize(position: Int): Int {
+                            when (adapter?.getItemViewType(position)) {
+                                MediaFileRecyclerViewAdapter.Type.CONTENT.ordinal -> return 1
+                                else -> return columnCount
                             }
                         }
                     }
@@ -62,6 +54,7 @@ class MediaFileFragment : Fragment() {
                     DummyContent.ITEMS,
                     listener
                 )
+                addItemDecoration(GridDividerDecoration(resources.getDimensionPixelSize(R.dimen.grid_divider), columnCount))
             }
         }
         return view
