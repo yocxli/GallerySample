@@ -41,8 +41,21 @@ class MediaFileFragment : Fragment() {
         if (view is RecyclerView) {
             with(view) {
                 layoutManager = when {
-                    columnCount <= 1 -> LinearLayoutManager(context)
-                    else -> GridLayoutManager(context, columnCount)
+                    columnCount <= 1 -> {
+                        LinearLayoutManager(context)
+                    }
+                    else -> {
+                        GridLayoutManager(context, columnCount).apply {
+                            spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+                                override fun getSpanSize(position: Int): Int {
+                                    when (adapter?.getItemViewType(position)) {
+                                        MediaFileRecyclerViewAdapter.Type.CONTENT.ordinal -> return 1
+                                        else -> return columnCount
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
                 adapter = MediaFileRecyclerViewAdapter(
                     this@MediaFileFragment,

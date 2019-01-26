@@ -14,19 +14,26 @@ import java.util.*
  */
 object DummyContent {
 
-    val ITEMS: MutableList<MediaFile> = ArrayList()
+    val ITEMS: MutableList<Any> = ArrayList()
 
-    val ITEM_MAP: MutableMap<String, MediaFile> = HashMap()
+    val ITEM_MAP: MutableMap<String, Any> = HashMap()
 
     private val COUNT = 25
 
     init {
+        ITEMS.add("Section 1")
         // Add some sample items.
         for (i in 1..COUNT) {
             addItem(
                 createDummyItem(
                     i
                 )
+            )
+        }
+        ITEMS.add("Section 2")
+        for (i in (COUNT+1)..(COUNT+COUNT)) {
+            addItem(
+                createDummyItem(i)
             )
         }
     }
