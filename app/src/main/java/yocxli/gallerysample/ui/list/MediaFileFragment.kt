@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -15,7 +16,7 @@ import yocxli.gallerysample.ui.list.dummy.DummyContent
 /**
  *
  */
-class MediaFileFragment : Fragment() {
+class MediaFileFragment : Fragment(), MediaFileRecyclerViewAdapter.OnListItemInteractionListener {
 
     private var columnCount = 1
 
@@ -41,9 +42,9 @@ class MediaFileFragment : Fragment() {
                 layoutManager = GridLayoutManager(context, columnCount).apply {
                     spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
                         override fun getSpanSize(position: Int): Int {
-                            when (adapter?.getItemViewType(position)) {
-                                MediaFileRecyclerViewAdapter.Type.CONTENT.ordinal -> return 1
-                                else -> return columnCount
+                            return when (adapter?.getItemViewType(position)) {
+                                MediaFileRecyclerViewAdapter.Type.CONTENT.ordinal -> 1
+                                else -> columnCount
                             }
                         }
                     }
@@ -51,7 +52,7 @@ class MediaFileFragment : Fragment() {
                 adapter = MediaFileRecyclerViewAdapter(
                     this@MediaFileFragment,
                     DummyContent.ITEMS,
-                    listener
+                    this@MediaFileFragment
                 )
                 addItemDecoration(
                     GridDividerDecoration(
@@ -74,6 +75,14 @@ class MediaFileFragment : Fragment() {
     override fun onDetach() {
         super.onDetach()
         listener = null
+    }
+
+    override fun onSectionInteraction(item: String) {
+        Toast.makeText(context, "'$item' clicked", Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onContentInteraction(item: MediaFile) {
+        Toast.makeText(context, "'$item' clicked", Toast.LENGTH_SHORT).show()
     }
 
     interface OnListFragmentInteractionListener {

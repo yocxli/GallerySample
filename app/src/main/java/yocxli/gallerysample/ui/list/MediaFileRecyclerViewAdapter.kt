@@ -15,7 +15,6 @@ import kotlinx.android.synthetic.main.fragment_mediafile_section.view.*
 import yocxli.gallerysample.GlideApp
 import yocxli.gallerysample.R
 import yocxli.gallerysample.domain.entity.MediaFile
-import yocxli.gallerysample.ui.list.MediaFileFragment.OnListFragmentInteractionListener
 
 /**
  *
@@ -23,15 +22,21 @@ import yocxli.gallerysample.ui.list.MediaFileFragment.OnListFragmentInteractionL
 class MediaFileRecyclerViewAdapter(
     private val fragment: Fragment,
     private val values: List<Any>,
-    private val mListener: OnListFragmentInteractionListener?
+    private val listener: OnListItemInteractionListener?
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private val mOnClickListener: View.OnClickListener
+    private val mOnSectionClickListener: View.OnClickListener
+    private val mOnContentClickListener: View.OnClickListener
 
     init {
-        mOnClickListener = View.OnClickListener { v ->
+        mOnSectionClickListener = View.OnClickListener { v ->
+            val item = v.tag as String
+            listener?.onSectionInteraction(item)
+
+        }
+        mOnContentClickListener = View.OnClickListener { v ->
             val item = v.tag as MediaFile
-            mListener?.onListFragmentInteraction(item)
+            listener?.onContentInteraction(item)
         }
     }
 
@@ -67,12 +72,16 @@ class MediaFileRecyclerViewAdapter(
 
                 with(holder.view) {
                     tag = item
-                    setOnClickListener(mOnClickListener)
+                    setOnClickListener(mOnContentClickListener)
                 }
             }
             else -> {
                 val holder = viewHolder as SectionViewHolder
                 holder.title.text = item.toString()
+                with(holder.view) {
+                    tag = item.toString()
+                    setOnClickListener(mOnSectionClickListener)
+                }
             }
         }
     }
@@ -87,7 +96,7 @@ class MediaFileRecyclerViewAdapter(
         }
     }
 
-    inner class SectionViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    inner class SectionViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
         val title: TextView = view.section_title
 
         override fun toString(): String {
@@ -107,5 +116,10 @@ class MediaFileRecyclerViewAdapter(
     enum class Type {
         SECTION_HEADER,
         CONTENT
+    }
+
+    interface OnListItemInteractionListener {
+        fun onSectionInteraction(item: String)
+        fun onContentInteraction(item: MediaFile)
     }
 }
