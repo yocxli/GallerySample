@@ -21,7 +21,7 @@ import yocxli.gallerysample.domain.entity.MediaFile
  */
 class MediaFileRecyclerViewAdapter(
     private val fragment: Fragment,
-    var values: List<out Any>,
+    var values: List<Any>,
     private val listener: OnListItemInteractionListener?
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -64,6 +64,7 @@ class MediaFileRecyclerViewAdapter(
                 val holder = viewHolder as ContentViewHolder
                 GlideApp.with(fragment)
                     .load(item.uri)
+                    .centerCrop()
                     .placeholder(ColorDrawable(Color.GRAY))
                     .error(ColorDrawable(Color.RED))
                     .fallback(ColorDrawable(Color.BLUE))

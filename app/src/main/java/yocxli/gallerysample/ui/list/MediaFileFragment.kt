@@ -2,7 +2,6 @@ package yocxli.gallerysample.ui.list
 
 import android.content.Context
 import android.content.pm.PackageManager
-import android.content.pm.PermissionInfo
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -18,7 +17,6 @@ import yocxli.gallerysample.R
 import yocxli.gallerysample.data.MediaRepositoryImpl
 import yocxli.gallerysample.domain.entity.MediaFile
 import yocxli.gallerysample.domain.usecase.ListAll
-import yocxli.gallerysample.ui.list.dummy.DummyContent
 
 /**
  *
@@ -32,6 +30,13 @@ class MediaFileFragment : Fragment(), MediaFileRecyclerViewAdapter.OnListItemInt
     lateinit var viewModel: MediaFileListViewModel
 
     lateinit var mediaFileRecyclerViewAdapter: MediaFileRecyclerViewAdapter
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is OnListFragmentInteractionListener) {
+            listener = context
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -80,27 +85,19 @@ class MediaFileFragment : Fragment(), MediaFileRecyclerViewAdapter.OnListItemInt
             val viewModelFactory = MediaFileViewModelFactory(ListAll(MediaRepositoryImpl(context as Context)))
             viewModel = ViewModelProviders.of(this, viewModelFactory).get(MediaFileListViewModel::class.java)
             viewModel.isLoading.observe(this, object : Observer<Boolean> {
-                override fun onChanged(t: Boolean?) {
+                override fun onChanged(t: Boolean) {
+                    if (t) showLoading() else hideLoading()
                 }
             })
-            viewModel.list?.observe(this, object : Observer<List<MediaFile>?> {
-                override fun onChanged(t: List<MediaFile>?) {
-                    t?.let {
-                        mediaFileRecyclerViewAdapter.values = it
-                    }
+            viewModel.list.observe(this, object : Observer<List<MediaFile>> {
+                override fun onChanged(t: List<MediaFile>) {
+                    updateListView(t)
                 }
             })
 
         }
 
         return view
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        if (context is OnListFragmentInteractionListener) {
-            listener = context
-        }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -134,6 +131,18 @@ class MediaFileFragment : Fragment(), MediaFileRecyclerViewAdapter.OnListItemInt
 
     override fun onContentInteraction(item: MediaFile) {
         Toast.makeText(context, "'$item' clicked", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun showLoading() {
+
+    }
+
+    private fun hideLoading() {
+
+    }
+
+    private fun updateListView(list: List<MediaFile>) {
+        mediaFileRecyclerViewAdapter.values = list
     }
 
     interface OnListFragmentInteractionListener {

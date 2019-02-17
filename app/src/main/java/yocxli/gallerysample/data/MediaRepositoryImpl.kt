@@ -3,7 +3,6 @@ package yocxli.gallerysample.data
 import android.content.Context
 import android.database.Cursor
 import android.provider.MediaStore
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import yocxli.gallerysample.domain.entity.ImageFile
@@ -17,7 +16,6 @@ class MediaRepositoryImpl(val context: Context) : MediaRepository {
     private val listLiveData = MutableLiveData<List<MediaFile>>()
 
     override suspend fun listAll(): LiveData<List<MediaFile>> {
-        Log.d("HOGE", "repository: listAll")
         val list: MutableList<MediaFile> = arrayListOf()
 
         val where = "${MediaStore.Files.FileColumns.MEDIA_TYPE} in (?, ?)"
@@ -30,7 +28,6 @@ class MediaRepositoryImpl(val context: Context) : MediaRepository {
             ?: return listLiveData
         cursor.use {
             while (it.moveToNext()) {
-                Log.d("HOGE", "repository: cursor move")
                 list.add(createMediaFile(it))
             }
         }

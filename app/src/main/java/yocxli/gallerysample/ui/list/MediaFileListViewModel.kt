@@ -1,6 +1,5 @@
 package yocxli.gallerysample.ui.list
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -18,7 +17,7 @@ class MediaFileListViewModel(val listAll: ListAll) : ViewModel(), CoroutineScope
         get() = Dispatchers.Main + job
 
     val isLoading: MutableLiveData<Boolean> = MutableLiveData()
-    var list: MutableLiveData<List<MediaFile>> = MutableLiveData()
+    val list: MutableLiveData<List<MediaFile>> = MutableLiveData()
 
     fun onStart() {
         launch {
