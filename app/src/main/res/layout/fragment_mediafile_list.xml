@@ -6,6 +6,6 @@
     android:name="yocxli.gallerysample.ui.MediaFileFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:layoutManager="LinearLayoutManager"
+    app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
     tools:context=".ui.list.MediaFileFragment"
     tools:listitem="@layout/fragment_mediafile_content" />
