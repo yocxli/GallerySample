@@ -1,16 +1,23 @@
 package yocxli.gallerysample.ui.list
 
 import android.content.Context
+import android.content.pm.PackageManager
+import android.content.pm.PermissionInfo
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.content.PermissionChecker
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import yocxli.gallerysample.R
+import yocxli.gallerysample.data.MediaRepositoryImpl
 import yocxli.gallerysample.domain.entity.MediaFile
+import yocxli.gallerysample.domain.usecase.ListAll
 import yocxli.gallerysample.ui.list.dummy.DummyContent
 
 /**
@@ -21,6 +28,10 @@ class MediaFileFragment : Fragment(), MediaFileRecyclerViewAdapter.OnListItemInt
     private var columnCount = 1
 
     private var listener: OnListFragmentInteractionListener? = null
+
+    lateinit var viewModel: MediaFileListViewModel
+
+    lateinit var mediaFileRecyclerViewAdapter: MediaFileRecyclerViewAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,6 +47,12 @@ class MediaFileFragment : Fragment(), MediaFileRecyclerViewAdapter.OnListItemInt
     ): View? {
         val view = inflater.inflate(R.layout.fragment_mediafile_list, container, false)
 
+        mediaFileRecyclerViewAdapter = MediaFileRecyclerViewAdapter(
+            this@MediaFileFragment,
+            arrayListOf(),
+            this@MediaFileFragment
+        )
+
         // Set the adapter
         if (view is RecyclerView) {
             with(view) {
@@ -49,11 +66,7 @@ class MediaFileFragment : Fragment(), MediaFileRecyclerViewAdapter.OnListItemInt
                         }
                     }
                 }
-                adapter = MediaFileRecyclerViewAdapter(
-                    this@MediaFileFragment,
-                    DummyContent.ITEMS,
-                    this@MediaFileFragment
-                )
+                adapter = mediaFileRecyclerViewAdapter
                 addItemDecoration(
                     GridDividerDecoration(
                         resources.getDimensionPixelSize(R.dimen.grid_divider),
@@ -62,6 +75,24 @@ class MediaFileFragment : Fragment(), MediaFileRecyclerViewAdapter.OnListItemInt
                 )
             }
         }
+
+        if (context != null) {
+            val viewModelFactory = MediaFileViewModelFactory(ListAll(MediaRepositoryImpl(context as Context)))
+            viewModel = ViewModelProviders.of(this, viewModelFactory).get(MediaFileListViewModel::class.java)
+            viewModel.isLoading.observe(this, object : Observer<Boolean> {
+                override fun onChanged(t: Boolean?) {
+                }
+            })
+            viewModel.list?.observe(this, object : Observer<List<MediaFile>?> {
+                override fun onChanged(t: List<MediaFile>?) {
+                    t?.let {
+                        mediaFileRecyclerViewAdapter.values = it
+                    }
+                }
+            })
+
+        }
+
         return view
     }
 
@@ -69,6 +100,26 @@ class MediaFileFragment : Fragment(), MediaFileRecyclerViewAdapter.OnListItemInt
         super.onAttach(context)
         if (context is OnListFragmentInteractionListener) {
             listener = context
+        }
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        if (PermissionChecker.checkSelfPermission(context!!, "android.permission.WRITE_EXTERNAL_STORAGE") == PermissionChecker.PERMISSION_GRANTED) {
+            viewModel.onStart()
+        } else {
+            requestPermissions(arrayOf("android.permission.WRITE_EXTERNAL_STORAGE"), 1)
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        when {
+            requestCode == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED -> {
+                viewModel.onStart()
+            }
+            else -> {
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+            }
         }
     }
 

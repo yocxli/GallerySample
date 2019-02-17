@@ -21,7 +21,7 @@ import yocxli.gallerysample.domain.entity.MediaFile
  */
 class MediaFileRecyclerViewAdapter(
     private val fragment: Fragment,
-    private val values: List<Any>,
+    var values: List<out Any>,
     private val listener: OnListItemInteractionListener?
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
