@@ -53,8 +53,6 @@ class MediaFileFragment : Fragment(), MediaFileRecyclerViewAdapter.OnListItemInt
         val view = inflater.inflate(R.layout.fragment_mediafile_list, container, false)
 
         mediaFileRecyclerViewAdapter = MediaFileRecyclerViewAdapter(
-            this@MediaFileFragment,
-            arrayListOf(),
             this@MediaFileFragment
         )
 
@@ -142,7 +140,7 @@ class MediaFileFragment : Fragment(), MediaFileRecyclerViewAdapter.OnListItemInt
     }
 
     private fun updateListView(list: List<MediaFile>) {
-        mediaFileRecyclerViewAdapter.values = list
+        mediaFileRecyclerViewAdapter.submitList(list)
     }
 
     interface OnListFragmentInteractionListener {

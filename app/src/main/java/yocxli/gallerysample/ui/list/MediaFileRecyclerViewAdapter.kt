@@ -8,22 +8,21 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.fragment_mediafile_content.view.*
 import kotlinx.android.synthetic.main.fragment_mediafile_section.view.*
 import yocxli.gallerysample.GlideApp
 import yocxli.gallerysample.R
-import yocxli.gallerysample.domain.entity.MediaFile
+import yocxli.gallerysample.domain.entity.*
 
 /**
  *
  */
 class MediaFileRecyclerViewAdapter(
-    private val fragment: Fragment,
-    var values: List<Any>,
     private val listener: OnListItemInteractionListener?
-) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+) : ListAdapter<MediaListItem, RecyclerView.ViewHolder>(DIFF_CALLBACK) {
 
     private val mOnSectionClickListener: View.OnClickListener
     private val mOnContentClickListener: View.OnClickListener
@@ -57,12 +56,12 @@ class MediaFileRecyclerViewAdapter(
     }
 
     override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, position: Int) {
-        val item = values[position]
+        val item = getItem(position)
 
         when (item) {
             is MediaFile -> {
                 val holder = viewHolder as ContentViewHolder
-                GlideApp.with(fragment)
+                GlideApp.with(holder.contentView)
                     .load(item.uri)
                     .centerCrop()
                     .placeholder(ColorDrawable(Color.GRAY))
@@ -87,13 +86,10 @@ class MediaFileRecyclerViewAdapter(
         }
     }
 
-    override fun getItemCount(): Int = values.size
-
     override fun getItemViewType(position: Int): Int {
-        val item = values[position]
-        when (item) {
-            is MediaFile -> return Type.CONTENT.ordinal
-            else -> return Type.SECTION_HEADER.ordinal
+        return when (getItem(position)) {
+            is MediaFile -> Type.CONTENT.ordinal
+            else -> Type.SECTION_HEADER.ordinal
         }
     }
 
@@ -123,4 +119,28 @@ class MediaFileRecyclerViewAdapter(
         fun onSectionInteraction(item: String)
         fun onContentInteraction(item: MediaFile)
     }
+}
+
+private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<MediaListItem>() {
+
+    override fun areItemsTheSame(oldItem: MediaListItem, newItem: MediaListItem): Boolean {
+        if (oldItem is MediaFile && newItem is MediaFile) {
+            return oldItem.uri == newItem.uri
+        } else if (oldItem is SectionLabel && newItem is SectionLabel) {
+            return oldItem.title == newItem.title
+        }
+        return false
+    }
+
+    override fun areContentsTheSame(oldItem: MediaListItem, newItem: MediaListItem): Boolean {
+        if (oldItem is ImageFile && newItem is ImageFile) {
+            return oldItem as ImageFile == newItem as ImageFile
+        } else if (oldItem is VideoFile && newItem is VideoFile) {
+            return oldItem as VideoFile == newItem as VideoFile
+        } else if (oldItem is SectionLabel && newItem is SectionLabel) {
+            return oldItem as SectionLabel == newItem as SectionLabel
+        }
+        return false
+    }
+
 }

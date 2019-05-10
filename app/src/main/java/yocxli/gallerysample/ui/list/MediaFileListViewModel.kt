@@ -10,7 +10,7 @@ import yocxli.gallerysample.domain.entity.MediaFile
 import yocxli.gallerysample.domain.usecase.ListAll
 import kotlin.coroutines.CoroutineContext
 
-class MediaFileListViewModel(val listAll: ListAll) : ViewModel(), CoroutineScope {
+class MediaFileListViewModel(private val listAll: ListAll) : ViewModel(), CoroutineScope {
 
     val job: Job = Job()
     override val coroutineContext: CoroutineContext

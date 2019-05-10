@@ -1,9 +1,17 @@
 package yocxli.gallerysample.domain.entity
 
+
+interface MediaListItem
+
+data class SectionLabel(
+    val title: String,
+    val description: String
+) : MediaListItem
+
 /**
  * dataクラスは継承できないのでinterfaceで対応
  */
-interface MediaFile {
+interface MediaFile : MediaListItem {
     val name: String
     val uri: String
     val mimeType: String
