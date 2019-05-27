@@ -41,7 +41,10 @@ class MediaRepositoryImpl(val context: Context) : MediaRepository {
             MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE -> {
                 ImageFile(
                     name = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Files.FileColumns.DISPLAY_NAME)),
-                    uri = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Files.FileColumns.DATA)),
+                    uri = MediaStore.Files.getContentUri(
+                        "external",
+                        cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Files.FileColumns._ID))
+                    ).toString(),
                     mimeType = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Files.FileColumns.MIME_TYPE)),
                     size = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Files.FileColumns.SIZE)),
                     takenTime = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Files.FileColumns.DATE_MODIFIED)),
@@ -54,7 +57,10 @@ class MediaRepositoryImpl(val context: Context) : MediaRepository {
             MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO -> {
                 VideoFile(
                     name = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Files.FileColumns.DISPLAY_NAME)),
-                    uri = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Files.FileColumns.DATA)),
+                    uri = MediaStore.Files.getContentUri(
+                        "external",
+                        cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Files.FileColumns._ID))
+                    ).toString(),
                     mimeType = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Files.FileColumns.MIME_TYPE)),
                     size = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Files.FileColumns.SIZE)),
                     takenTime = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Files.FileColumns.DATE_MODIFIED)),
