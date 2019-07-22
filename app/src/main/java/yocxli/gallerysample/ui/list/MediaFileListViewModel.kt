@@ -6,23 +6,22 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import yocxli.gallerysample.domain.entity.MediaFile
-import yocxli.gallerysample.domain.usecase.ListAll
+import yocxli.gallerysample.domain.repository.MediaRepository
 import kotlin.coroutines.CoroutineContext
 
-class MediaFileListViewModel(private val listAll: ListAll) : ViewModel(), CoroutineScope {
+class MediaFileListViewModel(private val mediaRepository: MediaRepository) : ViewModel(), CoroutineScope {
 
     val job: Job = Job()
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
 
     val isLoading: MutableLiveData<Boolean> = MutableLiveData()
-    val list: MutableLiveData<List<MediaFile>> = MutableLiveData()
+    val list = mediaRepository.listAll()
 
     fun onStart() {
         launch {
             isLoading.value = true
-            list.value = listAll.execute().value
+            mediaRepository.sync()
             isLoading.value = false
         }
     }

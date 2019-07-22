@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import yocxli.gallerysample.domain.entity.MediaFile
 
 interface MediaRepository {
-    suspend fun listAll(): LiveData<List<MediaFile>>
+    fun listAll(): LiveData<List<MediaFile>>
+    suspend fun sync(): Unit
     suspend fun find(uri: String): LiveData<MediaFile>
 }

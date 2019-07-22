@@ -14,9 +14,10 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import yocxli.gallerysample.R
+import yocxli.gallerysample.data.MediaLocalDataStore
+import yocxli.gallerysample.data.MediaRemoteDataStore
 import yocxli.gallerysample.data.MediaRepositoryImpl
 import yocxli.gallerysample.domain.entity.MediaFile
-import yocxli.gallerysample.domain.usecase.ListAll
 
 /**
  *
@@ -80,7 +81,13 @@ class MediaFileFragment : Fragment(), MediaFileRecyclerViewAdapter.OnListItemInt
         }
 
         if (context != null) {
-            val viewModelFactory = MediaFileViewModelFactory(ListAll(MediaRepositoryImpl(context as Context)))
+            val ctx = context as Context
+            val viewModelFactory = MediaFileViewModelFactory(
+                MediaRepositoryImpl(
+                    MediaRemoteDataStore(ctx.contentResolver),
+                    MediaLocalDataStore.getInstance(ctx)
+                )
+            )
             viewModel = ViewModelProviders.of(this, viewModelFactory).get(MediaFileListViewModel::class.java)
             viewModel.isLoading.observe(this, object : Observer<Boolean> {
                 override fun onChanged(t: Boolean) {
@@ -92,7 +99,6 @@ class MediaFileFragment : Fragment(), MediaFileRecyclerViewAdapter.OnListItemInt
                     updateListView(t)
                 }
             })
-
         }
 
         return view
