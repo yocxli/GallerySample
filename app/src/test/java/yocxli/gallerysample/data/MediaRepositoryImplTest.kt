@@ -8,6 +8,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
+import org.mockito.MockitoAnnotations
 
 
 @RunWith(AndroidJUnit4::class)
@@ -24,6 +25,7 @@ class MediaRepositoryImplTest {
 
     @Before
     fun setUp() {
+        MockitoAnnotations.initMocks(this)
         repository = MediaRepositoryImpl(mockLocalDataStore, mockRemoteDataStore)
     }
 
