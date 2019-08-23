@@ -1,4 +1,4 @@
-package yocxli.gallerysample.domain.`object`
+package yocxli.gallerysample.domain.entity
 
 data class Unixtime(val value: Long) {
     init {

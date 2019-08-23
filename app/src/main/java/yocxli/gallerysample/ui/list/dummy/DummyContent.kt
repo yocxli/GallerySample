@@ -3,6 +3,7 @@ package yocxli.gallerysample.ui.list.dummy
 import yocxli.gallerysample.domain.entity.ImageFile
 import yocxli.gallerysample.domain.entity.MediaFile
 import yocxli.gallerysample.domain.entity.Resolution
+import yocxli.gallerysample.domain.entity.Unixtime
 import java.util.*
 
 /**
@@ -48,7 +49,7 @@ object DummyContent {
             "Item " + position,
             "image/jpeg",
             3000,
-            System.currentTimeMillis(),
+            Unixtime(System.currentTimeMillis()),
             Resolution(300, 600)
         )
     }

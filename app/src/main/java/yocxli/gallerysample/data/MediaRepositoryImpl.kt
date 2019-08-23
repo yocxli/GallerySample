@@ -2,10 +2,7 @@ package yocxli.gallerysample.data
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
-import yocxli.gallerysample.domain.entity.ImageFile
-import yocxli.gallerysample.domain.entity.MediaFile
-import yocxli.gallerysample.domain.entity.Resolution
-import yocxli.gallerysample.domain.entity.VideoFile
+import yocxli.gallerysample.domain.entity.*
 import yocxli.gallerysample.domain.repository.MediaRepository
 
 class MediaRepositoryImpl(
@@ -38,7 +35,7 @@ class MediaRepositoryImpl(
         uri = entity.uri,
         mimeType = entity.mimeType,
         size = entity.size,
-        takenTime = entity.takenTime,
+        takenTime = Unixtime(entity.takenTime),
         resolution = Resolution(entity.width, entity.height)
     )
 
@@ -47,7 +44,7 @@ class MediaRepositoryImpl(
         uri = entity.uri,
         mimeType = entity.mimeType,
         size = entity.size,
-        takenTime = entity.takenTime,
+        takenTime = Unixtime(entity.takenTime),
         resolution = Resolution(entity.width, entity.height),
         duration = entity.duration ?: 0
     )

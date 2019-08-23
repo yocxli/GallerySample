@@ -1,4 +1,4 @@
-package yocxli.gallerysample.domain.`object`
+package yocxli.gallerysample.domain.entity
 
 import com.google.common.truth.Truth.assertThat
 import org.junit.After

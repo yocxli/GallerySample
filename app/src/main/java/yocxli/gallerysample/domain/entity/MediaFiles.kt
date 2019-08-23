@@ -16,7 +16,7 @@ interface MediaFile : MediaListItem {
     val uri: String
     val mimeType: String
     val size: Long
-    val takenTime: Long
+    val takenTime: Unixtime
     val resolution: Resolution
 }
 
@@ -27,7 +27,7 @@ data class ImageFile(
     override val uri: String,
     override val mimeType: String,
     override val size: Long,
-    override val takenTime: Long,
+    override val takenTime: Unixtime,
     override val resolution: Resolution
 ) : MediaFile
 
@@ -36,7 +36,7 @@ data class VideoFile(
     override val uri: String,
     override val mimeType: String,
     override val size: Long,
-    override val takenTime: Long,
+    override val takenTime: Unixtime,
     override val resolution: Resolution,
     val duration: Int
 ) : MediaFile
