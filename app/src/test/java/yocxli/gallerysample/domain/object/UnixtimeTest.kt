@@ -27,4 +27,14 @@ class UnixtimeTest {
         Unixtime(-1)
     }
 
+    @Test
+    fun compareTo() {
+        val unixtime1 = Unixtime(100)
+        val unixtime2 = Unixtime(101)
+
+        assertThat(unixtime1 > unixtime2).isFalse()
+        assertThat(unixtime1 < unixtime2).isTrue()
+        assertThat(unixtime1 >= unixtime2).isFalse()
+        assertThat(unixtime1 <= unixtime2).isTrue()
+    }
 }
