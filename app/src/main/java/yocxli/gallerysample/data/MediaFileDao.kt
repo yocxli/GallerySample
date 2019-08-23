@@ -8,7 +8,7 @@ import androidx.room.Query
 
 @Dao
 interface MediaFileDao {
-    @Query("SELECT * FROM media_files ORDER BY shooting_time DESC")
+    @Query("SELECT * FROM media_files ORDER BY taken_time DESC")
     fun listAll(): LiveData<List<MediaFileEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

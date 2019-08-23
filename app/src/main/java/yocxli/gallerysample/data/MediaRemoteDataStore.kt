@@ -4,27 +4,23 @@ import android.content.ContentResolver
 import android.content.ContentUris
 import android.provider.MediaStore
 import androidx.lifecycle.LiveData
-import yocxli.gallerysample.domain.entity.ImageFile
-import yocxli.gallerysample.domain.entity.MediaFile
-import yocxli.gallerysample.domain.entity.Resolution
-import yocxli.gallerysample.domain.entity.VideoFile
 
 class MediaRemoteDataStore(
     private val resolver: ContentResolver
 ) : MediaDataStore {
 
-    override fun listAll(): LiveData<List<MediaFile>> {
+    override fun listAll(): LiveData<List<MediaFileEntity>> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override suspend fun fetch(): List<MediaFile> {
-        val list = arrayListOf<MediaFile>()
+    override suspend fun fetch(): List<MediaFileEntity> {
+        val list = arrayListOf<MediaFileEntity>()
         fetchImages(list)
         fetchVideos(list)
         return list
     }
 
-    private fun fetchImages(list: ArrayList<MediaFile>) {
+    private fun fetchImages(list: ArrayList<MediaFileEntity>) {
         val cursor = resolver.query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, arrayOf("*"), null, null, null)
         cursor?.use {
             val displayNameIndex = it.getColumnIndexOrThrow(MediaStore.Images.ImageColumns.DISPLAY_NAME)
@@ -36,7 +32,8 @@ class MediaRemoteDataStore(
             val heightIndex = it.getColumnIndexOrThrow(MediaStore.Images.ImageColumns.HEIGHT)
             while (it.moveToNext()) {
                 list.add(
-                    ImageFile(
+                    MediaFileEntity(
+                        type = MediaFileEntityType.IMAGE.id,
                         name = it.getString(displayNameIndex),
                         uri = ContentUris.withAppendedId(
                             MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
@@ -45,14 +42,15 @@ class MediaRemoteDataStore(
                         mimeType = it.getString(mimeTypeIndex),
                         size = it.getLong(sizeIndex),
                         takenTime = it.getLong(dateTakenIndex),
-                        resolution = Resolution(it.getInt(widthIndex), it.getInt(heightIndex))
+                        width = it.getInt(it.getInt(widthIndex)),
+                        height = it.getInt(it.getInt(heightIndex))
                     )
                 )
             }
         }
     }
 
-    private fun fetchVideos(list: ArrayList<MediaFile>) {
+    private fun fetchVideos(list: ArrayList<MediaFileEntity>) {
         val cursor = resolver.query(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, arrayOf("*"), null, null, null)
         cursor?.use {
             val displayNameIndex = it.getColumnIndexOrThrow(MediaStore.Video.VideoColumns.DISPLAY_NAME)
@@ -65,7 +63,8 @@ class MediaRemoteDataStore(
             val durationIndex = it.getColumnIndexOrThrow(MediaStore.Video.VideoColumns.DURATION)
             while (it.moveToNext()) {
                 list.add(
-                    VideoFile(
+                    MediaFileEntity(
+                        type = MediaFileEntityType.VIDEO.id,
                         name = it.getString(displayNameIndex),
                         uri = ContentUris.withAppendedId(
                             MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
@@ -74,7 +73,8 @@ class MediaRemoteDataStore(
                         mimeType = it.getString(mimeTypeIndex),
                         size = it.getLong(sizeIndex),
                         takenTime = it.getLong(dateTakenIndex),
-                        resolution = Resolution(it.getInt(widthIndex), it.getInt(heightIndex)),
+                        width = it.getInt(it.getInt(widthIndex)),
+                        height = it.getInt(it.getInt(heightIndex)),
                         duration = it.getInt(durationIndex)
                     )
                 )
@@ -82,7 +82,7 @@ class MediaRemoteDataStore(
         }
     }
 
-    override suspend fun register(list: List<MediaFile>) {
+    override suspend fun register(list: List<MediaFileEntity>) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }

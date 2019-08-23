@@ -13,7 +13,7 @@ data class MediaFileEntity(
     @ColumnInfo(name = "name") val name: String,
     @ColumnInfo(name = "mime_type") val mimeType: String,
     @ColumnInfo(name = "size") val size: Long,
-    @ColumnInfo(name = "shooting_time") val shootingTime: Long,
+    @ColumnInfo(name = "taken_time") val takenTime: Long,
     @ColumnInfo(name = "width") val width: Int,
     @ColumnInfo(name = "height") val height: Int,
     @ColumnInfo(name = "duration") val duration: Int? = null
